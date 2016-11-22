@@ -13,7 +13,7 @@ Injector:
 GatewayInfo:
   PaywayRest:
     parameters:
-      apilink_ccform: https://api.payway.com.au/rest/v1/creditCardForm.js
-      # apikey_public: PUBLISHABLE-API-KEY
-      # apikey_secret: SECRET-API-KEY
-      # merchant: MERCHANT-ID
+      apiLinkCreditCardForm: https://api.payway.com.au/rest/v1/creditCardForm.js
+      # apiKeyPublic: PUBLISHABLE-API-KEY
+      # apiKeySecret: SECRET-API-KEY
+      # merchantId: MERCHANT-ID

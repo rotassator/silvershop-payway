@@ -72,31 +72,31 @@ class CheckoutStep_PaywayPayment extends CheckoutStep
     {
         // collect config so it can be extended
         $jsConfig = array(
-            'apilink_ccform' => $this->getConfig('apilink_ccform'),
-            'apikey_public'  => $this->getConfig('apikey_public'),
-            'return_url'     => Director::absoluteURL($this->owner->Link('payment')),
+            'apiLinkCreditCardForm' => $this->getConfig('apiLinkCreditCardForm'),
+            'apiKeyPublic'  => $this->getConfig('apiKeyPublic'),
+            'returnUrl'     => Director::absoluteURL($this->owner->Link('payment')),
         );
 
         $this->owner->extend('updatePaywayJSConfig', $jsConfig);
 
         // check the config
-        if (empty($jsConfig['apilink_ccform'])) {
-            user_error(_t(__CLASS__ . '.MissingApiLinkCCForm', 'Credit Card Form API link was not set - should be in GatewayInfo.Payway.parameters.apilink_ccform'));
+        if (empty($jsConfig['apiLinkCreditCardForm'])) {
+            user_error(_t(__CLASS__ . '.MissingApiLinkCCForm', 'Credit Card Form API link was not set - should be in GatewayInfo.Payway.parameters.apiLinkCreditCardForm'));
         }
-        if (empty($jsConfig['apikey_public'])) {
-            user_error(_t(__CLASS__ . '.MissingApiPublicKey', 'Publishable API key was not set - should be in GatewayInfo.Payway.parameters.apikey_public'));
+        if (empty($jsConfig['apiKeyPublic'])) {
+            user_error(_t(__CLASS__ . '.MissingApiPublicKey', 'Publishable API key was not set - should be in GatewayInfo.Payway.parameters.apiKeyPublic'));
         }
-        if (empty($jsConfig['return_url'])) {
+        if (empty($jsConfig['returnUrl'])) {
             user_error(_t(__CLASS__ . '.MissingReturnUrl', 'Return URL was not set - should be set to the Checkout payment link'));
         }
 
         // return JS API link
         return join(array(
-            $jsConfig['apilink_ccform'],
+            $jsConfig['apiLinkCreditCardForm'],
             '?apiKey=',
-            $jsConfig['apikey_public'],
+            $jsConfig['apiKeyPublic'],
             '&amp;redirectUrl=',
-            $jsConfig['return_url'],
+            $jsConfig['returnUrl'],
         ));
     }
 }
