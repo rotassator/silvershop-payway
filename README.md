@@ -4,7 +4,7 @@ Westpac PayWay payment integration for SilverShop.
 
 PayWay uses client-side JavaScript to generate tokens for using with their REST API instead of interacting with credit card details directly on your site.
 
-To integrate the Omnipay PaywayRest adapter with SilverShop, this module overrides the default checkout component and injects the required JavaScript.
+To integrate the Omnipay PaywayRest adapter with SilverShop, this module overrides the default checkout component.
 
 ## Kudos
 
@@ -29,9 +29,9 @@ Except:
 GatewayInfo:
   PaywayRest:
     parameters:
-      apikey_public: PUBLISHABLE-KEY-FOR-TEST-ACCOUNT
-      apikey_secret: SECRET-KEY-FOR-YOUR-TEST-ACCOUNT
-      merchant: TEST
+      apiKeyPublic: PUBLISHABLE-KEY-FOR-TEST-ACCOUNT
+      apiKeySecret: SECRET-KEY-FOR-YOUR-TEST-ACCOUNT
+      merchantId: TEST
       testMode: true
 
 ---
@@ -41,7 +41,7 @@ Only:
 GatewayInfo:
   PaywayRest:
     parameters:
-      apikey_public: PUBLISHABLE-KEY-FOR-LIVE-ACCOUNT
-      apikey_secret: SECRET-KEY-FOR-YOUR-LIVE-ACCOUNT
-      merchant: MERCHANT-ID
+      apiKeyPublic: PUBLISHABLE-KEY-FOR-LIVE-ACCOUNT
+      apiKeySecret: SECRET-KEY-FOR-YOUR-LIVE-ACCOUNT
+      merchantId: MERCHANT-ID
 ```
