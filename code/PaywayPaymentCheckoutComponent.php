@@ -3,8 +3,8 @@
 use SilverStripe\Omnipay\Service\PurchaseService;
 
 /**
- * This replaces the default OnsitePaymentCheckoutComponent and uses the PayWay
- * javascript to return a token to interact with the REST API.
+ * This replaces the default OnsitePaymentCheckoutComponent and uses the token returned by
+ * the PayWay javascript to interact with the REST API.
  *
  * @see https://www.payway.com.au/rest-docs/index.html
  *
@@ -70,7 +70,12 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
 
         // create list of fields
         $fields = FieldList::create(array(
-            HiddenField::create("singleUseTokenId", "singleUseTokenId", $this->getToken()),
+            HiddenField::create("singleUseTokenId", "singleUseTokenId", $this->getSingleUseTokenId()),
+            HiddenField::create('customerNumber', 'customerNumber', $this->getCustomerNumber($order)),
+            HiddenField::create('principalAmount', 'principalAmount', $order->Total()),
+            HiddenField::create('currency', 'currency', $this->getCurrency($order)),
+            HiddenField::create('orderNumber', 'orderNumber', $order->Reference),
+            HiddenField::create('merchantId', 'merchantId', $this->getMerchantId()),
         ));
 
         $this->extend('updateFormFields', $fields);
@@ -96,11 +101,8 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
     /**
      * Is this data valid for saving into an order?
      *
-     * This function should never rely on form.
-     *
      * @param Order $order
      * @param array $data data to be validated
-     *
      * @throws ValidationException
      * @return boolean the data is valid
      */
@@ -115,6 +117,89 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
     }
 
     /**
+     * Get Customer number
+     * @return string Customer number as supplied by PayWay
+     */
+    public function getCustomerNumber(Order $order)
+    {
+        // check if number already against order
+        if ($order->CustomerNumber) {
+            return $order->CustomerNumber;
+        }
+        // check for existing member
+        if ($order->Member()->exists()) {
+            /** @todo check member for customer number and create if none */
+            return null;
+        }
+
+        // set up gateway
+        $this->getGateway($order);
+        // ensure PayWay
+        if (!$this->isPayway) {
+            return null;
+        }
+
+        // create new customer
+        $response = $this->createCustomer();
+
+        /** @todo handle this more gracefully */
+        if (!$response->isSuccessful()) {
+            return null;
+        }
+
+        // update order
+        $order->CustomerNumber = $response->getCustomerNumber();
+        $order->write();
+
+        // update customer contact details
+        $contactResponse = $this->updateCustomerContact($order);
+
+        return $order->CustomerNumber;
+    }
+
+    /**
+     * Generate new customer
+     * @return Response Response object
+     */
+    public function createCustomer()
+    {
+        // create new customer
+        return $this->gateway->createCustomer(array(
+            'singleUseTokenId' => $this->getSingleUseTokenId(),
+            'merchantId'       => $this->getMerchantId(),
+        ))->send();
+    }
+
+    /**
+     * Update customer contact details
+     * @return Response Response object
+     */
+    public function updateCustomerContact($order)
+    {
+        // gather details
+        $data = array(
+            'customerNumber' => $order->CustomerNumber,
+            'customerName' => $order->getName(),
+            'emailAddress' => $order->Email,
+        );
+        // add billing address
+        $address = $order->BillingAddress();
+        if ($address->exists() && $address->Country === 'AU') { // PayWay only appears to support Australian addresses
+            $data = array_merge($data, array(
+                'phoneNumber' => $address->Phone,
+                'street1'     => $address->Address,
+                'street2'     => $address->AddressLine2,
+                'cityName'    => $address->City,
+                'state'       => $address->State,
+                'postalCode'  => $address->PostalCode,
+            ));
+        }
+
+        // update contact details
+        return $this->gateway->updateCustomerContact($data)->send();
+    }
+
+    /**
      * Get required data out of the model.
      *
      * @param  Order $order order to get data from.
@@ -126,17 +211,22 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         if (!$this->isPayway) {
             return parent::getData($order);
         }
-        return array();
+        $data = array(
+            'customerNumber'  => $this->getCustomerNumber($order),
+            'principalAmount' => $order->Total(),
+            'currency'        => $this->getCurrency($order),
+            'orderNumber'     => $order->Reference,
+            'merchantId'      => $this->getMerchantId(),
+        );
+
+        return $data;
     }
 
     /**
      * Set the model data for this component.
      *
-     * This function should never rely on form.
-     *
      * @param Order $order
      * @param array $data data to be saved into order object
-     *
      * @throws Exception
      * @return Order the updated order
      */
@@ -149,12 +239,41 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         return array();
     }
 
+    public function getParameters()
+    {
+        return new ParameterBag;
+    }
+
+    public function getParameter($key)
+    {
+        return $this->getParameters()->get($key);
+    }
+
     /**
      * Get Token from the URL parameters
      * @return string Single-use token passed from PayWay API
      */
-    public function getToken()
+    public function getSingleUseTokenId()
     {
-        return Controller::curr()->getRequest()->getVar('singleUseTokenId');
+        return Controller::curr()->getRequest()->requestVar('singleUseTokenId');
+    }
+
+    /**
+     * Get config array or parameter
+     * @param  string       $parm Config parameter name
+     * @return string|array       String if parameter; array if no parameter
+     */
+    protected function getMerchantId()
+    {
+        // get PayWay config
+        $config = Config::inst()->get('GatewayInfo', 'PaywayRest');
+        if (isset($config['parameters'])) {
+            return (isset($config['parameters']['merchantId'])) ? $config['parameters']['merchantId'] : '';
+        }
+    }
+
+    public function getCurrency(Order $order)
+    {
+        return isset($order) ? strtolower($order->Currency()) : null;
     }
 }

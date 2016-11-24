@@ -16,8 +16,14 @@ class CheckoutStep_PaywayPayment extends CheckoutStep
      */
     public function paymentdetails()
     {
+        // continue if not PayWay
+        $order = ShoppingCart::curr();
+        if (Checkout::get($order)->getSelectedPaymentMethod() !== 'PaywayRest') {
+            $this->owner->redirect($this->owner->Link('payment'));
+        }
+
         $form = $this->PaymentDetailsForm();
-        $this->owner->extend('updateConfirmationForm', $form);
+        $this->owner->extend('updatePaymentDetailsForm', $form);
 
         return array(
             'OrderForm' => $form,
