@@ -1,0 +1,23 @@
+---
+Name: silvershop-payway
+After:
+  - '#shopconfig'
+---
+
+# extensions
+Injector:
+  OnsitePaymentCheckoutComponent:
+    class: PaywayPaymentCheckoutComponent
+
+Order:
+  extensions:
+    - OrderExtension
+
+# payment
+GatewayInfo:
+  PaywayRest:
+    parameters:
+      apiLinkCreditCardForm: https://api.payway.com.au/rest/v1/creditCardForm.js
+      # apiKeyPublic: PUBLISHABLE-API-KEY
+      # apiKeySecret: SECRET-API-KEY
+      # merchantId: MERCHANT-ID

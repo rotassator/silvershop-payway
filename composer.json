@@ -1,0 +1,32 @@
+{
+    "name": "rotassator/silvershop-payway",
+    "description": "Westpac PayWay payment integration for SilverShop",
+    "type": "silverstripe-module",
+    "keywords": [
+        "silverstripe",
+        "silvershop",
+        "payment",
+        "stripe",
+        "stripejs"
+    ],
+    "homepage": "https://github.com/rotassator/silvershop-payway",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steve Dixon",
+            "email": "steve@rotassator.com"
+        }
+    ],
+    "require": {
+        "rotassator/omnipay-payway-restapi": "*",
+        "silvershop/core": "^2.0",
+        "silverstripe/framework": "^3.1",
+        "silverstripe/silverstripe-omnipay": "^2.0"
+    },
+    "support": {
+        "issues": "https://github.com/rotassator/silvershop-payway/issues"
+    },
+    "extra": {
+        "installer-name": "silvershop-payway"
+    }
+}
