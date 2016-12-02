@@ -6,6 +6,15 @@ PayWay uses client-side JavaScript to generate tokens for using with their REST 
 
 To integrate the Omnipay PaywayRest adapter with SilverShop, this module overrides the default checkout component.
 
+## Status
+
+To date, the following features have been implemented:
+
+* create single-use token via PayWay JS credit card form
+* create customer
+* save customer number against Member for reuse
+* make payment transaction
+
 ## Kudos
 
 Many thanks to the work done by Mark Guinn on the [Braintree](https://github.com/markguinn/silvershop-braintree) and [Stripe](https://github.com/markguinn/silvershop-stripe) modules.
