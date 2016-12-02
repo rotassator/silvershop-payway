@@ -9,6 +9,9 @@ Injector:
   OnsitePaymentCheckoutComponent:
     class: PaywayPaymentCheckoutComponent
 
+Member:
+  extensions:
+    - PaywayMemberExtension
 Order:
   extensions:
     - PaywayOrderExtension
