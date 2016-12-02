@@ -127,9 +127,9 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
             return $order->CustomerNumber;
         }
         // check for existing member
-        if ($order->Member()->exists()) {
-            /** @todo check member for customer number and create if none */
-            return null;
+        $member = $order->Member();
+        if ($member->exists() && $member->PaywayCustomerNumber) {
+            return $member->PaywayCustomerNumber;
         }
 
         // set up gateway
@@ -150,6 +150,12 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         // update order
         $order->CustomerNumber = $response->getCustomerNumber();
         $order->write();
+
+        // update member
+        if ($member->exists()) {
+            $member->PaywayCustomerNumber = $response->getCustomerNumber();
+            $member->write();
+        }
 
         // update customer contact details
         $contactResponse = $this->updateCustomerContact($order);
