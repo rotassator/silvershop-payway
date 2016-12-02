@@ -15,6 +15,9 @@ Member:
 Order:
   extensions:
     - PaywayOrderExtension
+ShopAccountForm:
+  extensions:
+    - PaywayShopAccountFormExtension
 
 # payment
 GatewayInfo:
