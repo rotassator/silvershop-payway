@@ -11,7 +11,7 @@ Injector:
 
 Order:
   extensions:
-    - OrderExtension
+    - PaywayOrderExtension
 
 # payment
 GatewayInfo:

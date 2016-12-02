@@ -2,7 +2,7 @@
 /**
  * Customise Order
  */
-class OrderExtension extends DataExtension
+class PaywayOrderExtension extends DataExtension
 {
     /** @var array List of database fields */
     private static $db = array(
