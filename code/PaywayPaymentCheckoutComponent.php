@@ -188,8 +188,8 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
             'customerName' => $order->getName(),
             'emailAddress' => $order->Email,
         );
-        // add billing address
-        $address = $order->BillingAddress();
+        // add shipping address
+        $address = $order->ShippingAddress();
         if ($address->exists() && $address->Country === 'AU') { // PayWay only appears to support Australian addresses
             $data = array_merge($data, array(
                 'phoneNumber' => $address->Phone,
