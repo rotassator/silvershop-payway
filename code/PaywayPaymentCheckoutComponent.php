@@ -76,6 +76,9 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
             HiddenField::create('currency', 'currency', $this->getCurrency($order)),
             HiddenField::create('orderNumber', 'orderNumber', $order->Reference),
             HiddenField::create('merchantId', 'merchantId', $this->getMerchantId()),
+            HiddenField::create('frequency', $this->getPaymentFrequency($order)),
+            HiddenField::create('nextPaymentDate', $this->getPaymentDateNext($order)),
+            HiddenField::create('regularPrincipalAmount', $order->Total()),
         ));
 
         $this->extend('updateFormFields', $fields);
@@ -218,11 +221,14 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
             return parent::getData($order);
         }
         $data = array(
-            'customerNumber'  => $this->getCustomerNumber($order),
-            'principalAmount' => $order->Total(),
-            'currency'        => $this->getCurrency($order),
-            'orderNumber'     => $order->Reference,
-            'merchantId'      => $this->getMerchantId(),
+            'customerNumber'         => $this->getCustomerNumber($order),
+            'principalAmount'        => $order->Total(),
+            'currency'               => $this->getCurrency($order),
+            'orderNumber'            => $order->Reference,
+            'merchantId'             => $this->getMerchantId(),
+            'frequency'              => $order->PaymentFrequency,
+            'nextPaymentDate'        => $order->PaymentDateNext,
+            'regularPrincipalAmount' => $order->Total(),
         );
 
         return $data;
@@ -278,8 +284,34 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         }
     }
 
+    /**
+     * Get order currency
+     * @param  Order  $order Current order
+     * @return string        Currency (lowercase)
+     */
     public function getCurrency(Order $order)
     {
         return isset($order) ? strtolower($order->Currency()) : null;
+    }
+
+    /**
+     * Get payment frequency
+     * @param  Order $order Current order
+     * @return string       Frequency of payment
+     */
+    public function getPaymentFrequency($order)
+    {
+        return ($order->PaymentFrequency) ?: 'once';
+    }
+
+    /**
+     * Get next payment date
+     * @param  Order $order Current order
+     * @return string       Date to start payment schedule
+     */
+    public function getPaymentDateNext($order)
+    {
+        // default to today's date if none supplied
+        return ($order->PaymentDateNext) ?: date('j M Y');
     }
 }

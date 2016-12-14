@@ -12,12 +12,20 @@ Injector:
 Member:
   extensions:
     - PaywayMemberExtension
+
 Order:
   extensions:
     - PaywayOrderExtension
+  # available payment frequencies
+  payment_frequency:
+    once: Once
+    # monthly: Monthly
+    # yearly: Annually
+
 ShopAccountForm:
   extensions:
     - PaywayShopAccountFormExtension
+
 
 # payment
 GatewayInfo:
