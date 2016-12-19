@@ -76,6 +76,7 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
             HiddenField::create('currency', 'currency', $this->getCurrency($order)),
             HiddenField::create('orderNumber', 'orderNumber', $order->Reference),
             HiddenField::create('merchantId', 'merchantId', $this->getMerchantId()),
+            HiddenField::create('bankAccountId', 'bankAccountId', $this->getBankAccountId()),
             HiddenField::create('frequency', $this->getPaymentFrequency($order)),
             HiddenField::create('nextPaymentDate', $this->getPaymentDateNext($order)),
             HiddenField::create('regularPrincipalAmount', $order->Total()),
@@ -176,6 +177,7 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         return $this->gateway->createCustomer(array(
             'singleUseTokenId' => $this->getSingleUseTokenId(),
             'merchantId'       => $this->getMerchantId(),
+            'bankAccountId'    => $this->getBankAccountId(),
         ))->send();
     }
 
@@ -226,8 +228,9 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
             'currency'               => $this->getCurrency($order),
             'orderNumber'            => $order->Reference,
             'merchantId'             => $this->getMerchantId(),
-            'frequency'              => $order->PaymentFrequency,
-            'nextPaymentDate'        => $order->PaymentDateNext,
+            'bankAccountId'          => $this->getBankAccountId(),
+            'frequency'              => $this->getPaymentFrequency($order),
+            'nextPaymentDate'        => $this->getPaymentDateNext($order),
             'regularPrincipalAmount' => $order->Total(),
         );
 
@@ -281,6 +284,20 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         $config = Config::inst()->get('GatewayInfo', 'PaywayRest');
         if (isset($config['parameters'])) {
             return (isset($config['parameters']['merchantId'])) ? $config['parameters']['merchantId'] : '';
+        }
+    }
+
+    /**
+     * Get config array or parameter
+     * @param  string       $parm Config parameter name
+     * @return string|array       String if parameter; array if no parameter
+     */
+    protected function getBankAccountId()
+    {
+        // get PayWay config
+        $config = Config::inst()->get('GatewayInfo', 'PaywayRest_DirectDebit');
+        if (isset($config['parameters'])) {
+            return (isset($config['parameters']['bankAccountId'])) ? $config['parameters']['bankAccountId'] : '';
         }
     }
 

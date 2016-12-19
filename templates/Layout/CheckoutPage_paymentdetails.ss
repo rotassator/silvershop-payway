@@ -14,9 +14,14 @@
     </a></h3>
 <% end_if %>
 
-<div class="paywaycreditcard">
-    <script type="text/javascript" src="$PaywayCreditCardJSLink"></script>
-    <button id="payway-creditcard-submit" onclick="paywayCreditCardSubmit()" disabled="disabled"><%t CheckoutStep_PaywayPayment.CreditCardFormButtonText 'Use Credit Card' %></button>
+<div class="payway-account $PaymentMethod.LowerCase">
+    <% if $PaymentMethod == 'PaywayRest_DirectDebit' %>
+        <script type="text/javascript" src="$PaywayBankAccountJSLink"></script>
+        <button class="payway-account-submit" id="payway-bankaccount-submit" onclick="paywayBankAccountSubmit()" disabled="disabled"><%t CheckoutStep_PaywayPayment.BankAccountFormButtonText 'Use Bank Account' %></button>
+    <% else %>
+        <script type="text/javascript" src="$PaywayCreditCardJSLink"></script>
+        <button class="payway-account-submit" id="payway-creditcard-submit" onclick="paywayCreditCardSubmit()" disabled="disabled"><%t CheckoutStep_PaywayPayment.CreditCardFormButtonText 'Use Credit Card' %></button>
+    <% end_if %>
 </div>
 
 $OrderForm
