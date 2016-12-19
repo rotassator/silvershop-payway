@@ -34,4 +34,10 @@ GatewayInfo:
       apiLinkCreditCardForm: https://api.payway.com.au/rest/v1/creditCardForm.js
       # apiKeyPublic: PUBLISHABLE-API-KEY
       # apiKeySecret: SECRET-API-KEY
-      # merchantId: MERCHANT-ID
+      # merchantId: TEST
+  PaywayRest_DirectDebit:
+    parameters:
+      apiLinkBankAccountForm: https://api.payway.com.au/rest/v1/bankAccountForm.js
+      # apiKeyPublic: PUBLISHABLE-API-KEY
+      # apiKeySecret: SECRET-API-KEY
+      # bankAccountId: 0000000A
