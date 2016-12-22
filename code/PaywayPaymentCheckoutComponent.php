@@ -126,16 +126,6 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
      */
     public function getCustomerNumber(Order $order)
     {
-        // check if number already against order
-        if ($order->CustomerNumber) {
-            return $order->CustomerNumber;
-        }
-        // check for existing member
-        $member = $order->Member();
-        if ($member->exists() && $member->PaywayCustomerNumber) {
-            return $member->PaywayCustomerNumber;
-        }
-
         // set up gateway
         $this->getGateway($order);
         // ensure PayWay
