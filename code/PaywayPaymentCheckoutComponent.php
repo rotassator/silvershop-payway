@@ -145,12 +145,6 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         $order->CustomerNumber = $response->getCustomerNumber();
         $order->write();
 
-        // update member
-        if ($member->exists()) {
-            $member->PaywayCustomerNumber = $response->getCustomerNumber();
-            $member->write();
-        }
-
         // update customer contact details
         $contactResponse = $this->updateCustomerContact($order);
 
