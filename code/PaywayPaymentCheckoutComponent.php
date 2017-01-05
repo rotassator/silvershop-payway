@@ -68,6 +68,9 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
             return parent::getFormFields($order);
         }
 
+        // generate order reference (allows for customisation)
+        $order->generateReference();
+
         // create list of fields
         $fields = FieldList::create(array(
             HiddenField::create("singleUseTokenId", "singleUseTokenId", $this->getSingleUseTokenId()),
