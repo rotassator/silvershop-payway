@@ -18,10 +18,8 @@
         }
     ],
     "require": {
-        "rotassator/omnipay-payway-restapi": "^1.1",
-        "silvershop/core": "^2.0",
-        "silverstripe/framework": "^3.1",
-        "silverstripe/silverstripe-omnipay": "^2.0"
+        "rotassator/omnipay-payway-restapi": "^1.2",
+        "silvershop/core": "^2.0"
     },
     "support": {
         "issues": "https://github.com/rotassator/silvershop-payway/issues"

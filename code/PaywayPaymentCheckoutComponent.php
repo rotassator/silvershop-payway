@@ -129,6 +129,8 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
      */
     public function getCustomerNumber(Order $order)
     {
+        $this->extend('beforeGetCustomerNumber', $order);
+
         // set up gateway
         $this->getGateway($order);
         // ensure PayWay
@@ -137,7 +139,7 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         }
 
         // create new customer
-        $response = $this->createCustomer();
+        $response = $this->createCustomer($order->CustomerNumber);
 
         /** @todo handle this more gracefully */
         if (!$response->isSuccessful()) {
@@ -156,16 +158,23 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
 
     /**
      * Generate new customer
+     * @param string $customerNumber Optional specified customer number
      * @return Response Response object
      */
-    public function createCustomer()
+    public function createCustomer($customerNumber = null)
     {
-        // create new customer
-        return $this->gateway->createCustomer(array(
+        $data = array(
             'singleUseTokenId' => $this->getSingleUseTokenId(),
             'merchantId'       => $this->getMerchantId(),
             'bankAccountId'    => $this->getBankAccountId(),
-        ))->send();
+        );
+
+        if ($customerNumber) {
+            $data['customerNumber'] = $customerNumber;
+        }
+
+        // create new customer
+        return $this->gateway->createCustomer($data)->send();
     }
 
     /**
