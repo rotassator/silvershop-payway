@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "rotassator/omnipay-payway-restapi": "^1.2",
+        "rotassator/omnipay-payway-restapi": "^1.4",
         "silvershop/core": "^2.0"
     },
     "support": {
