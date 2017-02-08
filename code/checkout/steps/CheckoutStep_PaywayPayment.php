@@ -37,7 +37,6 @@ class CheckoutStep_PaywayPayment extends CheckoutStep
     public function PaymentDetailsForm()
     {
         $config = new CheckoutComponentConfig(ShoppingCart::curr(), false);
-        // $config->addComponent(TermsCheckoutComponent::create());
         $this->owner->extend('updatePaymentDetailsComponentConfig', $config);
 
         $form = PaymentForm::create($this->owner, "PaymentDetailsForm", $config);
