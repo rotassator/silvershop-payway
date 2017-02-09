@@ -325,6 +325,9 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
     public function getPaymentDateNext($order)
     {
         // default to today's date if none supplied
-        return ($order->PaymentDateNext) ?: date('j M Y');
+        $paymentDateNext = ($order->PaymentDateNext) ?: date('j M Y');
+        $this->extend('updatePaymentDateNext', $paymentDateNext);
+
+        return $paymentDateNext;
     }
 }
