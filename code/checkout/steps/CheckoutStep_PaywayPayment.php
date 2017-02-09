@@ -22,7 +22,6 @@ class CheckoutStep_PaywayPayment extends CheckoutStep
         }
 
         $form = $this->PaymentDetailsForm();
-        $this->owner->extend('updatePaymentDetailsForm', $form);
 
         return array(
             'OrderForm'     => $form,
@@ -37,16 +36,16 @@ class CheckoutStep_PaywayPayment extends CheckoutStep
     public function PaymentDetailsForm()
     {
         $config = new CheckoutComponentConfig(ShoppingCart::curr(), false);
-        // $config->addComponent(TermsCheckoutComponent::create());
         $this->owner->extend('updatePaymentDetailsComponentConfig', $config);
 
         $form = PaymentForm::create($this->owner, "PaymentDetailsForm", $config);
         $form->setFailureLink($this->owner->Link('paymentdetails'));
-        $this->owner->extend('updatePaymentDetailsForm', $form);
 
         // remove form actions (next step controlled by JS form)
         $form->unsetAllActions();
         $form->disableDefaultAction();
+
+        $this->owner->extend('updatePaymentDetailsForm', $form);
 
         return $form;
     }
