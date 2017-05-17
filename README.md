@@ -21,6 +21,12 @@ Many thanks to the work done by Mark Guinn on the [Braintree](https://github.com
 
 ## Installation
 
+Install the module using composer.
+
+```
+composer require rotassator/silvershop-payway
+```
+
 Create a config file (eg. `mysite/_config/payment.yml`) similar to the following:
 
 ```
