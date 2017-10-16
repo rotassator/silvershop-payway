@@ -73,7 +73,6 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
 
         // create list of fields
         $fields = FieldList::create(array(
-            HiddenField::create("singleUseTokenId", "singleUseTokenId", $this->getSingleUseTokenId()),
             HiddenField::create('customerNumber', 'customerNumber', $this->getCustomerNumber($order)),
             HiddenField::create('principalAmount', 'principalAmount', $order->Total()),
             HiddenField::create('currency', 'currency', $this->getCurrency($order)),
