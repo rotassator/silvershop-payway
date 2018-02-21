@@ -69,7 +69,9 @@ class PaywayPaymentCheckoutComponent extends OnsitePaymentCheckoutComponent
         }
 
         // generate order reference (allows for customisation)
-        $order->generateReference();
+        if (!$order->getField("Reference")) {
+            $order->generateReference();
+        }
 
         // create list of fields
         $fields = FieldList::create(array(
